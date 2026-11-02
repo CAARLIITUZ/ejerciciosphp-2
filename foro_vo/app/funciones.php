@@ -8,11 +8,7 @@ function usuarioOk($usuario, $contraseña) :bool {
 
 function numPalabras (string $texto) : int {
    $textoSinEspacios = trim($texto);
-   if ($textoSinEspacios ===""){
-      return 0;
-   }
-   $arrayPalabras = preg_split('/\s+/', $textoSinEspacios);
-   return count($arrayPalabras);
+   return str_word_count($textoSinEspacios);
 }
 
 function letraMasRepetida(string $texto) : string{
