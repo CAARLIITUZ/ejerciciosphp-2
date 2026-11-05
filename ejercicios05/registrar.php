@@ -1,138 +1,128 @@
 <?php
-// Funciones auxilires  
-// ------------------------------------------------------------------
-function estaVacio(string $valor)
-{
-    return empty(trim($valor));
-}
 
-function hayMayusculas(string $valor)
-{
-    for ($i = 0; $i < strlen($valor); $i++) {
-        if (ctype_upper($valor[$i]))
+    //FUNCIONES AUXILIARES
+    function estaVacio(string $valor){
+        $cadena = trim($valor);
+        if (empty($cadena)){
             return true;
-    }
-    return false;
-}
-
-function hayMinusculas(string $valor)
-{
-    for ($i = 0; $i < strlen($valor); $i++) {
-        if (ctype_lower($valor[$i]))
-            return true;
-    }
-    return false;
-}
-
-function hayDigito(string $valor)
-{
-    for ($i = 0; $i < strlen($valor); $i++) {
-        if (ctype_digit($valor[$i]))
-            return true;
-    }
-    return false;
-}
-
-function hayNoAlfanumerico(string $valor)
-{
-    for ($i = 0; $i < strlen($valor); $i++) {
-        if (!ctype_alnum($valor[$i]))
-            return true;
-    }
-    return false;
-}
-
-function postvalor(string $elemento): string
-{
-    if (isset($_POST[$elemento])) {
-        $resu = $_POST[$elemento];
-    } else {
-        $resu = "";
-    }
-    return $resu;
-}
-//--------------------------------------------------------------------
-// Proceso los datos
-$msg = "";
-$registrado = false;
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    // No hay valores vacios
-    $campovacio = "";
-    foreach ($_POST as $campo => $valor) {
-        if (estaVacio($valor)) {
-            $campovacio = $campo;
-            break;
+        }else{
+            return false;
         }
     }
-    if ($campovacio != "") {
-        $msg = "El campo $campovacio esta vacio <br>";
-    }
-    // No es un email
-    else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        $msg .= " No es un email correcto. <br>";
+
+    function hayMayuscula(string $valor){
+        $cadena = trim($valor);
+        for($i=0; $i<mb_strlen($cadena);$i++){
+            if(ctype_upper($cadena[$i])){
+                return true;
+            }
+        }
+        return false;
     }
 
-    // Validando contraseña
-    else if ($_POST['contraseña1'] != $_POST['contraseña2']) {
-        $msg .= " Las contraseñas deben ser iguales <br> ";
-    } else if (strlen($_POST['contraseña1']) < 8) {
-        $msg .= " Tamaño de la contraseña debe ser igual o superior a 8 caracteres en total <br>";
-    } else if (!hayMayusculas($_POST['contraseña1']) || !hayMinusculas($_POST['contraseña1'])) {
-        $msg .= " Debe haber mayúsculas y minúsculas.<br> ";
-        echo $_POST['contraseña1'];
-    } else if (!hayDigito($_POST['contraseña1'])) {
-        $msg .= " Debe haber algun dígito. <br>";
-    } else if (!hayNoAlfanumerico($_POST['contraseña1'])) {
-        $msg .= " No hay nigún caracter no alfanumérico <br> ";
-    } else {
-        // Pasado todos los controles
-        $registrado = true;
+    function hayMinuscula(string $valor){
+        $cadena = trim($valor);
+        for($i=0; $i<mb_strlen($cadena);$i++){
+            if(ctype_lower($cadena[$i])){
+                return true;
+            }
+        }
+        return false;
     }
-} // PETICIÓN POST
 
+    function hayDigito(string $valor){
+        $cadena = trim($valor);
+        for($i=0; $i<mb_strlen($cadena);$i++){
+            if(ctype_digit($cadena[$i])){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function hayCaracterNoAlNum(string $valor){
+        $cadena = trim($valor);
+        for($i=0; $i<mb_strlen($cadena);$i++){
+            if(!ctype_alnum($cadena[$i])){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+// Variable para controlar el mensaje de error o éxito
+    $mensajeError = "";
+    $registrado = false;
+
+    // Si el usuario ha enviado el formulario
+    if ($_SERVER['REQUEST_METHOD'] == "POST"){
+        $campoVacio = "";
+        foreach($_POST as $campo => $valor){
+            if(estaVacio($valor)){
+                $campoVacio = $campo;
+                break;
+            }
+        }
+
+        $mail = $_POST['mail'] ?? '';
+        $pass1 = $_POST['contrasena1'] ?? '';
+        $pass2 = $_POST['contrasena2'] ?? '';
+
+        // Validaciones en cascada guardando el error en la variable
+        if (!empty($campoVacio)){
+            $mensajeError = "El campo " . $campoVacio . " está vacío.";
+        }else if(!filter_var($mail, FILTER_VALIDATE_EMAIL)){
+            $mensajeError = "ERROR: El formato del correo electrónico no es válido.";
+        }else if ($pass1 !== $pass2){
+            $mensajeError = "ERROR: Las contraseñas no coinciden.";
+        }else if(mb_strlen($pass1) < 8){
+            $mensajeError = "ERROR: La contraseña debe tener más de 8 caracteres.";
+        }else if(!hayMayuscula($pass1)){
+            $mensajeError = "ERROR: La contraseña debe tener al menos 1 mayúscula.";
+        }else if (!hayMinuscula($pass1)){
+            $mensajeError = "ERROR: La contraseña debe tener al menos 1 minúscula.";
+        }else if(!hayDigito($pass1)){
+            $mensajeError = "ERROR: La contraseña debe tener al menos 1 dígito.";
+        }else if(!hayCaracterNoAlNum($pass1)){
+            $mensajeError = "ERROR: La contraseña debe tener un símbolo no alfanumérico (@, !, #...).";
+        }else{
+            $registrado = true; // ¡Todo OK!
+        }
+    }
 ?>
-<html>
 
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="default.css" rel="stylesheet" type="text/css" />
-    <title>Registrar Usuario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
 </head>
-
 <body>
-    <div id="container" style="width: 600px;">
-        <div id="header">
-            <h1>FORMULARIO DE REGISTRO</h1>
-        </div>
 
+    <?php if ($registrado): ?>
+        <!-- Si ya se registró con éxito, mostramos mensaje de OK y ocultamos el formulario -->
+        <h2 style="color: green;">¡FELICIDADES, USUARIO REGISTRADO CON ÉXITO!</h2>
+    <?php else: ?>
+        <!-- Si no se ha registrado (o hay error), mostramos el formulario -->
 
-        <div id="content">
-            <?php if (!$registrado): ?>
-                <form method="post">
-                    <fieldset>
-                        <legend>Datos para registrar:</legend>
-                        Nombre:
-                        <input type="text" name="nombre" placeholder="Nombre"
-                            value="<?= postvalor('nombre') ?>" size="10"><br>
-                        Correo electrónico:
-                        <input type="text" name="email" placeholder="Correo electrónico"
-                            value="<?= postvalor('email')  ?>" size="15"><br>
-                        Contraseña
-                        <input type="text" name="contraseña1" placeholder="Contraseña"
-                            value="<?= postvalor('contraseña1')  ?>" size="10"><br>
-                        Contraseña
-                        <input type="text" name="contraseña2" placeholder="Contraseña"
-                            value="<?= postvalor('contraseña2') ?>" size="10"> (Repetir )<br>
-                        <input type="submit" value="Enviar" />
-                        <input type="reset" value="Limpiar" />
-                    </fieldset>
-                </form>
-                <?= $msg ?>
-            <?php else: ?>
-                Sus datos son correctos. <br><b> Ha sido registrado en el sistema.<b><br>
-            <?php endif ?>
-        </div>
-    </div>
+        <?php 
+            // Si hay un error, lo mostramos arriba del formulario
+            if (!empty($mensajeError)) {
+                echo '<p style="color: red; font-weight: bold;">' . $mensajeError . '</p>';
+            }
+        ?>
+
+        <form action="" method="POST">
+            <!-- Usamos value="..." para que no se borre lo que el usuario escribió si hay un error -->
+            <label for="">Usuario <input type="text" name="usuario" value="<?php echo htmlspecialchars($_POST['usuario'] ?? ''); ?>"></label><br>
+            <label for="">Email <input type="email" name="mail" value="<?php echo htmlspecialchars($_POST['mail'] ?? ''); ?>"></label><br>
+            <label for="">Contraseña <input type="password" name="contrasena1"></label><br>
+            <label for="">Repita Contraseña <input type="password" name="contrasena2"></label><br>
+            <input type="submit" value="Enviar datos">
+        </form>
+    <?php endif; ?>
+
 </body>
-
 </html>
