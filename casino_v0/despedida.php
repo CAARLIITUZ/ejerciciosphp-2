@@ -8,8 +8,7 @@
 <p>
  Muchas gracias por jugar con nosotros. <br> 
  Su resultado final es de <?= $disponible ?> Euros <br>
- <input type="button" value="  VOLVER A JUGAR " onclick="location.href='<?=$_SERVER['PHP_SELF'];?>'" >
-</p>
+<input type="button" value="  VOLVER A JUGAR " onclick="location.href='<?=$_SERVER['PHP_SELF'];?>?reiniciar=1'" ></p>
 </body>
 </html>
         

@@ -1,15 +1,15 @@
 <?php
 session_start();
 
+// Si el usuario ha pulsado "Volver a jugar" desde la despedida
+if (isset($_GET['reiniciar'])) {
+  unset($_SESSION['disponible']); // Borramos la sesión del dinero
+  header("Location: " . $_SERVER['PHP_SELF']); // Recargamos la página limpia
+  exit();
+}
 // Cambiar  visitar --> VALOR DE COOKIE
 // Cambiar disponible --> VALOR DE SESSION
-$visitas = 1;
-if (isset($_COOKIE['visitas'])) {
-    $visitas = (int)$_COOKIE['visitas'] + 1;
-} else {
-    $visitas = 1;
-}
-setcookie("visitas", $visitas, time() + (86400 * 30), "/");
+
 
 //OTRA FORMA DE HACERLO MAS SIMPLE
 /*$visitas = isset($_COOKIE['visitas']) ? $_COOKIE['visitas'] + 1 : 1;
@@ -23,19 +23,22 @@ $msg = "";
 
 // Entra en el casino --------------------------------
 if (! isset($_SESSION['disponible'])) {
-  if (isset($_POST['cantidadini'])){
-    $_SESSION['disponible']= $_POST['cantidadini'];
+  if (isset($_POST['cantidadini'])) {
+    $_SESSION['disponible'] = $_POST['cantidadini'];
     $disponible = $_SESSION['disponible'];
-    require_once "form_apuesta.php";
-  }else{
+  } else {
+    if (isset($_COOKIE['visitas'])) {
+  $visitas = (int)$_COOKIE['visitas'] + 1;
+} else {
+  $visitas = 1;
+}
+setcookie("visitas", $visitas, time() + (86400 * 30), "/");
     require_once "form_bienvenida.php";
     exit();
   }
   // No continuo despues de mostrar los formularios
-}else{
+} else {
   $disponible = $_SESSION['disponible'];
-  require_once "form_apuesta.php";
-  exit();
 }
 
 
@@ -44,8 +47,8 @@ if (! isset($_SESSION['disponible'])) {
 // llama a procesar apuesta 
 if (isset($_POST["apostar"])) {
 
-  procesarApuesta($_POST['cantidad'], $disponible,$_POST['apuesta']);
-  $_SESSION['disponible']= $disponible;
+  $msg = procesarApuesta($_POST['cantidad'], $disponible, $_POST['apuesta']);
+  $_SESSION['disponible'] = $disponible;
 }
 
 // Si abandona o ya no le queda dinero -------------------------
@@ -66,25 +69,25 @@ require_once  "form_apuesta.php";
 
 function procesarApuesta(int $valorapuesta, int &$saldodisponible, string $apuesta): String
 {
-  $numeroRandom = rand(1,20);
+  $numeroRandom = rand(1, 20);
   $msgresultado = "";
   if ($valorapuesta > $saldodisponible) {
-      $msgresultado = "Error: no dispone de $valorapuesta euros disponibles.";
+    $msgresultado = "Error: no dispone de $valorapuesta euros disponibles.";
   } else {
-      // Determinamos si el número aleatorio es par o impar
-      $esPar = ($numeroRandom % 2 == 0);
-      $tipoNumero = $esPar ? "PAR" : "IMPAR";
+    // Determinamos si el número aleatorio es par o impar
+    $esPar = ($numeroRandom % 2 == 0);
+    $tipoNumero = $esPar ? "PAR" : "IMPAR";
 
-      // Comprobamos si el usuario acertó
-      $acerto = ($apuesta == $tipoNumero);
+    // Comprobamos si el usuario acertó
+    $acerto = ($apuesta == $tipoNumero);
 
-      if ($acerto) {
-          $saldodisponible += $valorapuesta;
-          $msgresultado = "RESULTADO DE LA APUESTA : $tipoNumero <br> ¡GANASTE!";
-      } else {
-          $saldodisponible -= $valorapuesta;
-          $msgresultado = "RESULTADO DE LA APUESTA : $tipoNumero <br> PERDISTE";
-      }
+    if ($acerto) {
+      $saldodisponible += $valorapuesta;
+      $msgresultado = "RESULTADO DE LA APUESTA : $tipoNumero <br> ¡GANASTE!";
+    } else {
+      $saldodisponible -= $valorapuesta;
+      $msgresultado = "RESULTADO DE LA APUESTA : $tipoNumero <br> PERDISTE";
+    }
   }
   return $msgresultado;
 }
