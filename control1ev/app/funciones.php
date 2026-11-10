@@ -9,7 +9,13 @@ require_once ('dat/datos.php');
  */
 function userOk($login,$clave):bool {
     global $usuarios;
-    return true;
+
+    if (array_key_exists($login, $usuarios) && $usuarios[$login][1] == $clave){
+        return true;
+    }else{
+        return false;
+    }
+    
 }
 
 /**
@@ -18,8 +24,8 @@ function userOk($login,$clave):bool {
  *  @return ROL_ALUMNO o ROL_PROFESOR
  */
 function getUserRol($login){
-    
-    return ROL_ALUMNO;
+    global $usuarios;
+    return $usuarios[$login][2];
 }
 
 /**
@@ -33,9 +39,13 @@ function verNotasAlumno($codigo):String{
     global $notas;
     global $usuarios;
 
-    $msg .= " Bienvenido/a alumno/a: ". "FULANITO";
+    $msg .= " Bienvenido/a alumno/a: ". $usuarios[$codigo][0];
     $msg .= "<table>";
     // Completar
+        $msg .= "<tr><td>Módulo</td><td>Nota</td></tr>";
+        foreach($nombreModulos as $indice =>$nombreModulo ){
+            $msg.= "<tr><td>". $nombreModulo ."</td><td>" .$notas[$codigo][$indice] . "</td></tr>";
+        }
     $msg .= "</table>";
     return $msg;
 }
@@ -50,8 +60,26 @@ function verNotaTodas ($codigo): String {
     global $nombreModulos;
     global $notas;
     global $usuarios;
-    $msg .= " Bienvenido Profesor: ". " D. FULATINO";
+    $msg .= " Bienvenido Profesor: ". $usuarios[$codigo][0];
     $msg .= "<table>";
+    $msg .= "<tr><th>Nombre</th>";
+        foreach($nombreModulos as $nombreModulo){
+            $msg .= "<th>". $nombreModulo ."</th>";
+        }
+    $msg .= "</tr>";
+
+        foreach($usuarios as $codigoUsuario => $datosUsuario){
+            if ($datosUsuario[2] == ROL_ALUMNO){
+                $msg .= "<tr><td>".$datosUsuario[0] ."</td>";
+                
+                foreach($notas[$codigoUsuario] as $nota){
+                $msg .= "<td>". $nota."</td>";
+                }
+            }
+            
+            $msg .= "</tr>";
+        }
+    
     $msg .= "</table>";
     return $msg;
 }
