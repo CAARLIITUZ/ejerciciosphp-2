@@ -1,5 +1,4 @@
 <?php
-namespace pruebas00\taller\POO;
 
 class Coche
 {
