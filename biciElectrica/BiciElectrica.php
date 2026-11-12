@@ -5,16 +5,15 @@
  */
 class BiciElectrica {
 
-    // Atributos privados 
-    private int $id;        // Identificador de la bicicleta (entero) [cite: 9]
-    private int $coordx;    // Coordenada X (entero) [cite: 10]
-    private int $coordy;    // Coordenada Y (entero) [cite: 11]
-    private int $bateria;   // Carga de la batería en tanto por ciento (entero) [cite: 12]
-    private int $operativa; // Estado de la bicicleta (true operativa - false no disponible) [cite: 13]
+    // Atributos privados
+    private int $id;         // Identificador de la bicicleta (entero)
+    private int $coordx;     // Coordenada X (entero)
+    private int $coordy;     // Coordenada Y (entero)
+    private int $bateria;   // Carga de la batería en tanto por ciento (entero)
+    private int $operativa; // Estado de la bicicleta (true operativa - false no disponible)
 
     /**
      * Constructor para inicializar el objeto BiciElectrica.
-     * 
      */
     public function __construct($id, $coordx, $coordy, $bateria, $operativa) {
         $this->id = (int)$id;
@@ -50,12 +49,10 @@ class BiciElectrica {
 
     /**
      * Devuelve la distancia entre las coordenadas pasadas como parámetro
-     * y las coordenadas de la bicicleta. 
-     * Se aplica la fórmula de distancia entre dos puntos. 
+     * y las coordenadas de la bicicleta aplicando la fórmula de distancia entre dos puntos[cite: 3]. 
      */
     public function distancia($x, $y) {
-        //COMPLETAR ----------------
-        return 10;
+        // Se aplica la fórmula matemática de la distancia euclidiana: sqrt((x2 - x1)^2 + (y2 - y1)^2)[cite: 3]
+        return sqrt(pow($this->coordx - $x, 2) + pow($this->coordy - $y, 2));
     }
 }
-
