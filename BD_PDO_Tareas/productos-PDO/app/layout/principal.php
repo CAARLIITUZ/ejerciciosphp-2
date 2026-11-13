@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>CRUD DE USUARIOS</title>
+<title>CRUD DE PRODUCTOS</title>
 <link href="web/default.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="web/js/funciones.js"></script>
 </head>

@@ -74,7 +74,7 @@ class AccesoDatos {
     // Devuelvo un usuario o false
     public function getProducto (String $codigo) {
         $prod = false;
-        $stmt_producto   = $this->dbh->prepare("select * from Usuarios where codigo=:codigo");
+        $stmt_producto   = $this->dbh->prepare("select * from productos where codigo=:codigo");
         $stmt_producto->setFetchMode(PDO::FETCH_CLASS, 'Producto');
         $stmt_producto->bindParam(':codigo', $codigo);
         if ( $stmt_producto->execute() ){
