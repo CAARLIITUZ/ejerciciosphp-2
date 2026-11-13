@@ -1,10 +1,10 @@
 <?php
-require_once "app/dat/Usuario.php";
+require_once "app/dat/Producto.php";
 require_once 'app/dat/AccesoDatos.php';
 
-function accionBorrar ($login){    
+function accionBorrar ($codigo){    
     $db = AccesoDatos::getModelo();
-    $tuser = $db->borrarUsuario($login);
+    $tproducto = $db->borrarProducto($codigo);
 }
 
 function accionTerminar(){
@@ -14,50 +14,53 @@ function accionTerminar(){
 }
  
 function accionAlta(){
-    $user = new Usuario();
-    $user->nombre  = "";
-    $user->login   = "";
-    $user->password   = "";
-    $user->comentario = "";
+    $producto = new Producto();
+    $producto->nombre  = "";
+    $producto->codigo   = "";
+    $producto->stock   = "";
+    $producto->stock_min = "";
+    $producto->precio = "";
     $orden= "Nuevo";
     include_once "layout/formulario.php";
 }
 
-function accionDetalles($login){
+function accionDetalles($codigo){
     $db = AccesoDatos::getModelo();
-    $user = $db->getUsuario($login);
+    $producto = $db->getProducto($codigo);
     $orden = "Detalles";
     include_once "layout/formulario.php";
 }
 
 
-function accionModificar($login){
+function accionModificar($codigo){
     $db = AccesoDatos::getModelo();
-    $user = $db->getUsuario($login);
+    $producto = $db->getProducto($codigo);
     $orden="Modificar";
     include_once "layout/formulario.php";
 }
 
 function accionPostAlta(){
-    $user = new Usuario();
-    $user->nombre  = $_POST['nombre'];
-    $user->login   = $_POST['login'];
-    $user->password   = $_POST['clave'];
-    $user->comentario = $_POST['comentario'];
+    $prod = new Producto();
+    $prod->nombre  = $_POST['nombre'];
+    $prod->codigo   = $_POST['codigo'];
+    $prod->stock   = $_POST['stock'];
+    $prod->stock_min = $_POST['stock_min'];
+    $prod->precio = $_POST['precio'];
     $db = AccesoDatos::getModelo();
-    $db->addUsuario($user);
+    $db->addProducto($prod);
     
 }
 
 function accionPostModificar(){
     
-    $user = new Usuario();
-    $user->nombre  = $_POST['nombre'];
-    $user->login   = $_POST['login'];
-    $user->password  = $_POST['clave'];
-    $user->comentario = $_POST['comentario'];
+    $prod = new Producto();
+    $prod->nombre  = $_POST['nombre'];
+    $prod->codigo   = $_POST['codigo'];
+    $prod->stock  = $_POST['stock'];
+    $prod->stock_min = $_POST['stock_min'];
+    $prod->precio = $_POST['precio'];
     $db = AccesoDatos::getModelo();
-    $db->modUsuario($user);
+    $db->modProducto($prod);
     
 }
 

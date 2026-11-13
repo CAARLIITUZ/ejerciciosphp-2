@@ -28,18 +28,18 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `Productos` (
-  `CODIGO` int(4) NOT NULL,
-  `NOMBRE` varchar(30) NOT NULL,
-  `STOCK` int(5) NOT NULL,
-  `STOCK_MIN` int(5) NOT NULL,
-  `PRECIO` float NOT NULL
+  `codigo` int(4) NOT NULL,
+  `nombre` varchar(30) NOT NULL,
+  `stock` int(5) NOT NULL,
+  `stock_min` int(5) NOT NULL,
+  `precio` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Volcado de datos para la tabla `Productos`
 --
 
-INSERT INTO `Productos` (`CODIGO`, `NOMBRE`, `STOCK`, `STOCK_MIN`, `PRECIO`) VALUES
+INSERT INTO `Productos` (`codigo`, `nombre`, `stock`, `stock_min`, `precio`) VALUES
 (1001, 'Morcillas', 10, 5, 12),
 (1002, 'Chorizo', 30, 5, 12.5),
 (1003, 'Chope', 70, 15, 4.5),
@@ -59,7 +59,7 @@ INSERT INTO `Productos` (`CODIGO`, `NOMBRE`, `STOCK`, `STOCK_MIN`, `PRECIO`) VAL
 -- Indices de la tabla `Productos`
 --
 ALTER TABLE `Productos`
-  ADD PRIMARY KEY (`CODIGO`);
+  ADD PRIMARY KEY (`codigo`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
